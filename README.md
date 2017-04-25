@@ -1,4 +1,4 @@
-Aface Mailgin SDK PHP
+Aface Mailgun SDK PHP
 =====================
 
 
