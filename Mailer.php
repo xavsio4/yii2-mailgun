@@ -74,14 +74,22 @@ class Mailer extends BaseMailer
      */
     protected function sendMessage($message)
     {
-        Yii::info('Sending email', __METHOD__);
+        $params = $message->getMessageBuilder()->getMessage();
 
-        $this->getMailgun()->post("{$this->domain}/messages",
-            $message->getMessageBuilder()->getMessage(),
-            $message->getMessageBuilder()->getFiles()
+        $params['from'] = !empty($params['from']) ? implode(',', $params['from']) : null;
+
+        $params['to'] = !empty($params['to'][0]) ? implode(',', $params['to'][0]) : null;
+
+        $result = $this->getMailgun()->messages()->send($this->domain,
+            array_merge($params, ['attachment' => $message->getMessageBuilder()->getFiles()])
         );
 
-        return true;
+        if (!empty($result->getId())) {
+            Yii::info('Sending email', $result->getId());
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -97,6 +105,6 @@ class Mailer extends BaseMailer
         if (!$this->domain) {
             throw new InvalidConfigException('Mailer::domain must be set.');
         }
-        return new Mailgun($this->key);
+        return Mailgun::create($this->key);
     }
 }
