@@ -70,22 +70,20 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * @inheritdoc
+     * @param \yii\mail\MessageInterface $message
+     * @return bool
      */
     protected function sendMessage($message)
     {
-        $params = $message->getMessageBuilder()->getMessage();
-
-        $params['from'] = !empty($params['from']) ? implode(',', $params['from']) : null;
-
-        $params['to'] = !empty($params['to'][0]) ? implode(',', $params['to'][0]) : null;
-
-        $result = $this->getMailgun()->messages()->send($this->domain,
-            array_merge($params, ['attachment' => $message->getMessageBuilder()->getFiles()])
+        $result = $this->getMailgun()->sendMessage(
+            $this->domain,
+            $message->getMessageBuilder()->getMessage(),
+            $message->getMessageBuilder()->getFiles()
         );
 
-        if (!empty($result->getId())) {
-            Yii::info('Sending email', $result->getId());
+        Yii::info('Sending email', print_r($result, true));
+
+        if ($result->http_response_code === 200) {
             return true;
         }
 
