@@ -25,7 +25,6 @@ to the require section of your application's `composer.json` file.
 Usage
 -----
 
-add rule for hide 'index' action
 ```
 'components' => [
      ...
