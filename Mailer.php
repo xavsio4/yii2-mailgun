@@ -44,8 +44,18 @@ class Mailer extends BaseMailer
 
     /**
      * @var string Mailgun API credentials.
+     * @see https://app.mailgun.com/app/account/security
      */
     public $key;
+
+    /**
+     * @var string Mailgun API Email Validation Key.
+     * @see https://app.mailgun.com/app/account/security
+     */
+    public $emailValidKey;
+
+    /** @var string Mailgun API Email Validation URL */
+    public $emailValidUrl = 'https://api.mailgun.net/v3/address/validate';
 
     /**
      * @var string Mailgun domain.
@@ -104,5 +114,41 @@ class Mailer extends BaseMailer
             throw new InvalidConfigException('Mailer::domain must be set.');
         }
         return Mailgun::create($this->key);
+    }
+
+    /**
+     * Use curl to send the validation request to Mailgun
+     * @param string $email
+     * @param boolean $returnBool
+     * @return array
+     * @throws \Exception
+     */
+    public function emailValidate($email, $returnBool = true)
+    {
+        $curl = curl_init();
+        curl_setopt_array(
+            $curl,
+            [
+                CURLOPT_URL => $this->emailValidUrl . "?api_key=" . $this->emailValidKey .  "&address=" . urlencode($email),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_MAXREDIRS => 0,
+                CURLOPT_TIMEOUT => 30,
+            ]
+        );
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+
+        if ($err) {
+            throw new \Exception("Mailgun email validation error: {$err}");
+        }
+
+        $result = json_decode($response);
+
+        if ($returnBool === true) {
+            return $result->is_valid;
+        }
+
+        return $result;
     }
 }
