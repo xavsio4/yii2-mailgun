@@ -31,9 +31,15 @@ Usage
     'mailer' => [
         'class' => 'aface\mailgun\Mailer',
         'viewPath' => '@common/mail',
+        'emailValidKey' => 'emailValidKey-example',
         'key' => 'key-example',
         'domain' => 'mg.example.com',
     ],
     ...
 ],
+```
+
+Validate email
+```
+Yii::$app->mailer->emailValidate($email)
 ```
