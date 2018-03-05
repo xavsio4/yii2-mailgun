@@ -148,7 +148,6 @@ class Mailer extends BaseMailer
         if ($returnBool === true) {
             return $result->mailbox_verification;
         }
-
         return $result;
     }
 }
