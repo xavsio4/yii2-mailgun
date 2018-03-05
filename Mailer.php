@@ -146,7 +146,7 @@ class Mailer extends BaseMailer
         $result = json_decode($response);
 
         if ($returnBool === true) {
-            return $result->is_valid;
+            return $result->mailbox_verification;
         }
 
         return $result;
