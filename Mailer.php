@@ -9,22 +9,7 @@ use Yii;
 
 /**
  * Mailer implements a mailer based on Mailgun.
- *
  * To use Mailer, you should configure it in the application configuration like the following,
- *
- * ~~~
- * 'components' => [
- *     ...
- *     'mailer' => [
- *         'class' => 'aface\mailgun\Mailer',
- *         'viewPath' => '@common/mail',
- *         'key' => 'key-example',
- *         'domain' => 'mg.example.com',
- *     ],
- *     ...
- * ],
- * ~~~
- *
  * To send an email, you may use the following code:
  *
  * ~~~
@@ -120,35 +105,25 @@ class Mailer extends BaseMailer
      * Use curl to send the validation request to Mailgun
      * @param string $email
      * @param boolean $returnBool
-     * @return array
+     * @return boolean|\stdClass
      * @throws \Exception
      */
     public function emailValidate($email, $returnBool = true)
     {
-        $curl = curl_init();
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $this->emailValidUrl . "?api_key=" . $this->emailValidKey .  "&address=" . urlencode($email),
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_MAXREDIRS => 0,
-                CURLOPT_TIMEOUT => 30,
-            ]
-        );
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
+        $mgClient = Mailgun::create($this->emailValidKey);
+        $result = $mgClient->get('address/validate', [
+            'address' => $email,
+            'mailbox_verification' => true
+        ]);
 
-        if ($err) {
-            throw new \Exception("Mailgun email validation error: {$err}");
+        if ($returnBool !== true) {
+            return $result;
         }
 
-        $result = json_decode($response);
-
-        if ($returnBool === true) {
-            return $result->mailbox_verification;
+        if ($result->http_response_code === 200) {
+            return filter_var($result->http_response_body->mailbox_verification, FILTER_VALIDATE_BOOLEAN);
         }
 
-        return $result;
+        return false;
     }
 }
