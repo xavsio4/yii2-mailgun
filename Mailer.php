@@ -121,6 +121,9 @@ class Mailer extends BaseMailer
         }
 
         if ($result->http_response_code === 200) {
+            if ($result->http_response_body->mailbox_verification == 'unknown') {
+                return $result->http_response_body->is_valid;
+            }
             return filter_var($result->http_response_body->mailbox_verification, FILTER_VALIDATE_BOOLEAN);
         }
 
