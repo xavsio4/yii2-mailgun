@@ -32,6 +32,12 @@ class Mailer extends BaseMailer
      * @see https://app.mailgun.com/app/account/security
      */
     public $key;
+    
+    /**
+     * @var string Mailgun API.
+     * @see https://app.mailgun.com/app/account/security
+     */
+    public $endpoint;
 
     /**
      * @var string Mailgun API Email Validation Key.
@@ -98,7 +104,11 @@ class Mailer extends BaseMailer
         if (!$this->domain) {
             throw new InvalidConfigException('Mailer::domain must be set.');
         }
-        return Mailgun::create($this->key);
+        
+        if (!$this->endpoint) {
+            $this->endpoint = 'https://api.mailgun.net'; //US endpoint by default
+        }
+        return Mailgun::create($this->key,$endpoint);
     }
 
     /**
