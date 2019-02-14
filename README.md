@@ -27,6 +27,7 @@ Usage
         'viewPath' => '@common/mail',
         'emailValidKey' => 'emailValidKey-example',
         'key' => 'key-example',
+        'endpoint => 'https://api.eu.mailgun.net' // Optional. If your domain is on EU
         'domain' => 'mg.example.com',
     ],
     ...
