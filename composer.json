@@ -17,7 +17,7 @@
   },
   "require": {
     "yiisoft/yii2": "~2.0",
-    "mailgun/mailgun-php": "^3.0-dev",
+    "mailgun/mailgun-php": "dev-master",
     "php-http/curl-client": "^1.7",
     "guzzlehttp/psr7": "^1.4"
   },
