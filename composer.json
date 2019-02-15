@@ -1,5 +1,5 @@
 {
-  "name": "analyticsface/yii2-mailgun",
+  "name": "xavsio4/yii2-mailgun",
   "description": "Mailgun SDK PHP for Yii2 Framework.",
   "type": "yii2-extension",
   "keywords": ["yii2", "yii 2", "mailgun"],
@@ -12,8 +12,8 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/analyticsface/yii2-mailgun/issues?state=open",
-    "source": "https://github.com/analyticsface/yii2-mailgun"
+    "issues": "https://github.com/xavsio4/yii2-mailgun/issues?state=open",
+    "source": "https://github.com/xavsio4/yii2-mailgun"
   },
   "require": {
     "yiisoft/yii2": "~2.0",
